@@ -12,7 +12,7 @@ module.exports.localStrategy = new localStrategy({
         if (user.error) {
             return done(null, false);
         }
-        User.comparePassword(password, user.users_password).then((isMatch) => {
+        User.comparePassword(password, user.user_password).then((isMatch) => {
             if (isMatch)
                 return done(null, user);
             else {
@@ -33,7 +33,7 @@ module.exports.jwtStrategy = new JWTStrategy({
         secretOrKey: config.secret
     },
     function(jwtPayload, cb) {
-        User.getUserByUsername(jwtPayload.users_username)
+        User.getUserByUsername(jwtPayload.user_username)
             .then(user => {
                 return cb(null, user);
             })
