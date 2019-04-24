@@ -15,10 +15,10 @@ router.get('/', auth, (req, res) => {
         })
 })
 
-router.get(`/id`, auth, (req, res) => {
-        console.log(req.params.itemId+""+1)
+router.get(`/:id`, auth, (req, res) => {
+        console.log(req.params.id+" "+1)
 
-    content.getMangaId(req.body.itemId)
+        manga.getMangaId(req.params.id)
         .then((data) => {
             res.send(data);
         })
@@ -46,8 +46,45 @@ router.post('/', auth, (req, res) =>{
     })
   })
 
-  router.delete('/', auth, (req, res) =>{
-    manga.deleteManga(req.body.manga_id) 
+  router.delete('/:id', auth, (req, res) =>{
+    manga.deleteManga(req.params.id) 
+    .then((data) => {
+        res.send(data);
+    })
+    .catch((err) => {
+        res.send(err);
+    })
+  })
+
+  router.post('/:id', auth, (req, res) =>{
+    req.body.manga_id = req.params.id;
+    manga.addChapter(req.body) 
+    .then((data) => {
+        res.send(data);
+    })
+    .catch((err) => {
+        res.send(err);
+    })
+  })
+
+  router.get(`/:id/:chapterid`, auth, (req, res) => {
+    console.log(req.params.id+" "+1)
+    req.body.manga_id = req.params.id;
+    req.body.chapter_id = req.params.chapterid;
+    manga.getMangaId(req.body)
+    .then((data) => {
+        res.send(data);
+    })
+    .catch((err) => {
+        res.send(err);
+    })
+})
+
+  router.delete('/:id/:chapterid', auth, (req, res) =>{
+    req.body.manga_id = req.params.id;
+    req.body.chapter_id = req.params.chapterid;
+    
+    manga.deleteChapter(req.body) 
     .then((data) => {
         res.send(data);
     })
