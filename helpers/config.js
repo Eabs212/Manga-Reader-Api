@@ -1,5 +1,5 @@
 const config = {
-    dbUrl: 'postgres://postgres:admin@localhost:5433/manga',
+    dbUrl: 'postgres://postgres:masterkey@localhost:5432/DummyDB',
     port: 3001,
     secret: 'eabs212',
     uploads: `${__dirname}/../public/uploads`

@@ -5,6 +5,7 @@ const sql = require('./queries.js');
 module.exports.addCommentManga = (data) => {
     return new Promise((res, rej) => {
         db.connect().then((obj) => {
+            console.log(data)
             obj.none(sql.general.newCommentManga, [data.user_id, data.manga_id, data.comment_content])
                 .then(() => {
                     res({
@@ -30,7 +31,7 @@ module.exports.addCommentManga = (data) => {
 module.exports.addCommentChapter = (data) => {
     return new Promise((res, rej) => {
         db.connect().then((obj) => {
-            obj.none(sql.general.newComment, [data.user_id, data.chapter_id, data.comment_content])
+            obj.none(sql.general.newCommentChapter, [data.user_id, data.chapter_id, data.comment_content])
                 .then(() => {
                     res({
                         message: "succesfully",

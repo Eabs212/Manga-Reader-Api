@@ -27,6 +27,7 @@ router.get(`/:id`, auth, (req, res) => {
         })
 })
 router.post('/', auth, (req, res) =>{
+    req.body.user_id = req.user.user_id;
     manga.addManga(req.body) 
     .then((data) => {
         res.send(data);
@@ -37,6 +38,7 @@ router.post('/', auth, (req, res) =>{
   })
 
   router.put('/', auth, (req, res) =>{
+    req.body.user_id = req.user.user_id;
     manga.updateManga(req.body) 
     .then((data) => {
         res.send(data);
@@ -58,6 +60,7 @@ router.post('/', auth, (req, res) =>{
 
   router.post('/:id', auth, (req, res) =>{
     req.body.manga_id = req.params.id;
+    console.log(req.body)
     manga.addChapter(req.body) 
     .then((data) => {
         res.send(data);
@@ -68,10 +71,10 @@ router.post('/', auth, (req, res) =>{
   })
 
   router.get(`/:id/:chapterid`, auth, (req, res) => {
-    console.log(req.params.id+" "+1)
-    req.body.manga_id = req.params.id;
     req.body.chapter_id = req.params.chapterid;
-    manga.getMangaId(req.body)
+    req.body.manga_id = req.params.id;
+
+    manga.getChapter(req.body)
     .then((data) => {
         res.send(data);
     })

@@ -40,7 +40,7 @@ module.exports.getMangaId = (mangaId) => {
              const mangac = await obj.any(sql.general.getChapter, [mangaId]);
              const manga_comments = await obj.any(sql.general.getCommentsManga, [mangaId]);
              const manga_likes = await obj.one(sql.general.getLikesManga, [mangaId]);
-             manga.likes = manga_likes; 
+             manga.likes = manga_likes.count; 
              manga.comments = manga_comments; 
              manga.chapter = mangac;
              return manga;
@@ -72,6 +72,7 @@ module.exports.getMangaId = (mangaId) => {
 module.exports.addManga = (manga) => {
     return new Promise((res, rej) => {
         db.connect().then((obj) => {
+            console.log(manga)
             obj.none(sql.general.newManga, [manga.user_id, manga.manga_name, manga.manga_synopsis, manga.manga_status])
                 .then(() => {
                     res({
@@ -96,6 +97,7 @@ module.exports.addManga = (manga) => {
 module.exports.addChapter = (chapter) => {
     return new Promise((res, rej) => {
         db.connect().then((obj) => {
+            console.log(chapter)
             obj.none(sql.general.newChapter, [chapter.manga_id, chapter.chapter_number, chapter.chapter_title, chapter.chapter_location])
                 .then(() => {
                     res({
@@ -104,6 +106,7 @@ module.exports.addChapter = (chapter) => {
                     });
                     obj.done();
                 }).catch((error) => {
+                    console.log(error)
                     rej({
                         error: error,
                         msg: 'Error',
@@ -120,11 +123,14 @@ module.exports.addChapter = (chapter) => {
 module.exports.updateManga = (manga) => {
     return new Promise((res, rej) => {
         db.connect().then((obj) => {
-            obj.none(sql.general.updateManga, [manga.manga_name, manga.manga_synopsis, manga.manga_id])
+        console.log(manga)
+
+            obj.none(sql.general.updateManga, [manga.manga_name, manga.manga_synopsis, manga.manga_id, manga.user_id])
                 .then(() => {
                     res({
                         msg: 'OK. Updated',
-                        status: 200
+                        status: 200,
+                        data: true
                     });
                     obj.done();
                 }).catch((error) => {
@@ -173,11 +179,13 @@ module.exports.getChapter = (chapter) => {
             db.task(async t => {
 
                 console.log(chapter)
-                 const mangac = await obj.any(sql.general.getChapterManga, [chapter.manga_id, chapter.chapter_id]);
-                 //const manga_comments_chapter = await obj.any(sql.general.getCommentsManga, [chapter.manga_id, chapter.chapter_id]);
-                 const manga_likes_chapter = await obj.one(sql.general.getLikesChapter, [chapter.chapter_id]);
-                 mangac.likes = manga_likes_chapter; 
-                 //mangac.comments = manga_comments_chapter; 
+                 const mangac = await obj.one(sql.general.getChapterManga, [ chapter.chapter_id, chapter.manga_id]);
+                 const manga_comments_chapter = await obj.any(sql.general.getCommentsChapter, [chapter.chapter_id]);
+                 const manga_likes = await obj.one(sql.general.getLikesChapter, [chapter.chapter_id]);
+
+                 mangac.likes = manga_likes.count;
+                 console.log(mangac, 'culo')
+                 mangac.comments = manga_comments_chapter; 
                  return mangac;
                 }) 
                 .then((data) => {
