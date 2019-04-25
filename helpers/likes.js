@@ -87,3 +87,38 @@ module.exports.dislikeManga = (data) => {
         });;
     });
 };
+
+module.exports.dislikeChapter = (data) => {
+    return new Promise((res, rej) => {
+        db.connect().then((obj) => {
+            console.log(data)
+            obj.result(sql.general.dislikeChapter, [data.user_id, data.chapter_id])
+                .then((result) => {
+                    if(result.rowCount > 0){
+                    res({
+                        message: "succesfully",
+                        status: 200,
+                        data:true
+                    });
+                }else{
+                    res({
+                    message: "Error",
+                    status: 200,
+                    data:false
+                });
+                }
+                    obj.done();
+                }).catch((error) => {
+                    rej({
+                        error: error,
+                        msg: 'Error',
+                        status: 500
+                    });
+                    obj.done();
+                });
+        }).catch((error) => {
+            console.log(error);
+            rej(error);
+        });;
+    });
+};

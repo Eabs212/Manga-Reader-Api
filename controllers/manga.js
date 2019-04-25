@@ -37,7 +37,8 @@ router.post('/', auth, (req, res) =>{
     })
   })
 
-  router.put('/', auth, (req, res) =>{
+  router.put('/:id', auth, (req, res) =>{
+    req.body.manga_id = req.params.id;
     req.body.user_id = req.user.user_id;
     manga.updateManga(req.body) 
     .then((data) => {

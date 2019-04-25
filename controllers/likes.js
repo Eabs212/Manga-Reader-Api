@@ -16,7 +16,6 @@ router.post('/:id', auth, (req, res) =>{
   })
 router.post('/:id/:chapterid', auth, (req, res) =>{
     req.body.chapter_id = req.params.chapterid;
-    req.body.manga_id = req.params.id;
     req.body.user_id = req.user.user_id;
     like.likeChapter(req.body) 
     .then((data) => {
@@ -30,6 +29,17 @@ router.post('/:id/:chapterid', auth, (req, res) =>{
     req.body.manga_id = req.params.id;
     req.body.user_id = req.user.user_id;
     like.dislikeManga(req.body) 
+    .then((data) => {
+        res.send(data);
+    })
+    .catch((err) => {
+        res.send(err);
+    })
+  })
+  router.delete('/:id/:chapterid', auth, (req, res) =>{
+    req.body.chapter_id = req.params.chapterid;
+    req.body.user_id = req.user.user_id;
+    like.dislikeChapter(req.body) 
     .then((data) => {
         res.send(data);
     })
